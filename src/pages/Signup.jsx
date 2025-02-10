@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import {Link, useNavigate} from 'react-router-dom'
 
 const Signup = () => {
 
@@ -7,24 +8,30 @@ const Signup = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    const handleSubmit = async(e) =>{
+    const navigate = useNavigate()
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        try{
+        try {
             const response = await axios.post("http://localhost:5000/api/auth/register",
-                {name, email, password}
+                { name, email, password }
             );
-            console.log(response);
-        }catch(error){
+            if(response.data.success){
+                navigate('/login')
+            }
+
+            // console.log(response);
+        } catch (error) {
             console.log(error);
 
         }
 
     }
 
-    
+
 
     return (
-        <div className='flex justify-center items-center min-h-screen bg-gray-100' >
+        <div className='flex justify-center items-center min-h-screen bg-gradient-to-t from-violet-300 to-purple-500' >
             <div className='border shadow mb-4 bg-white w-[300px] h-auto p-6 rounded'>
                 <h2 className='text-center text-2xl font-semibold text-violet-600 mb-4' >SignUp</h2>
                 <form onSubmit={handleSubmit} className='flex flex-col mx-5'>
@@ -45,8 +52,10 @@ const Signup = () => {
 
                     <button type='submit' className=' bg-violet-600 px-5 py-1 text-white rounded hover:bg-white border border-violet-700 hover:text-black transition-all duration-300'>SignUp</button>
 
-                    <p className='text-sm mt-2 mx-3'>Already Have Account?<span className='text-violet-800 font-normal underline cursor-pointer'> LogIn</span></p>
-
+                    <p className="text-[14px] mt-2 mx-1">
+                        Already have an account?
+                        <Link to="/login" className="text-violet-800 font-normal underline cursor-pointer"> Log In</Link>
+                    </p>
                 </form>
             </div>
 
