@@ -2,16 +2,16 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/ContextProvider'
 
-const Navbar = () => {
+const Navbar = ({setQuery}) => {
 
   const navigate = useNavigate()
   const { user } = useAuth()
   return (
-    <nav className='bg-violet-500 flex justify-between '>
+    <nav className='bg-purple-600 flex justify-between '>
       <div>
         <Link to="/" className='text-[30px] text-white ms-5 font-semibold'>mYnotes</Link>
       </div>
-      <input className=' rounded-full h-8 w-64 px-3 outline-none text-violet-800 my-3 ' type="text" placeholder='Search notes ...' />
+      <input onChange={(e) => setQuery(e.target.value)} className=' rounded-full h-8 w-64 px-3 outline-none text-violet-800 my-3 ' type="text" placeholder='Search notes ...' />
       <div className="m-4 ">
 
         {!user ? (
