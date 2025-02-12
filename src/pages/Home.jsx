@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar'
 import NoteModal from '../components/NoteModal'
 import NoteCard from '../components/NoteCard'
 import axios from 'axios'
+import {toast} from 'react-toastify'
 
 const Home = () => {
 
@@ -14,9 +15,9 @@ const Home = () => {
 
 
   useEffect(() => {
-
+    editNote()
     fetchNotes()
-  }, [])
+  },[])
 
   // Notes Filtering
   useEffect(()=>{
@@ -30,9 +31,15 @@ const Home = () => {
   //Fetch the Notes From the Backend(get Method)
   const fetchNotes = async () => {
     try {
-      const { data } = await axios.get("http://localhost:5000/api/note")
+      const { data } = await axios.get("http://localhost:5000/api/note",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        }
+      )
       setNotes(data.notes)
-    } catch (error) {
+    } catch(error) {
       console.log(error)
     }
   }
@@ -56,13 +63,14 @@ const Home = () => {
         "http://localhost:5000/api/note/add",
         { title, description }, {
         headers: {
-          Authorization: `Bear ${localStorage.getItem("token")}`
+          Authorization: `Bearer ${localStorage.getItem("token")}`
         }
       }
 
       );
       if (response.data.success) {
         //  navigate('/')
+        toast.success("Note added successfully")
         fetchNotes()
         closeModal()
       }
@@ -84,6 +92,7 @@ const Home = () => {
       }
       );
       if (response.data.success) {
+        toast.success("Note edited successfully")
         fetchNotes()
         closeModal()
       }
@@ -101,11 +110,12 @@ const Home = () => {
         `http://localhost:5000/api/note/${id}`,
         {
           headers: {
-            Authorization: `Bear ${localStorage.getItem("token")}`
+            Authorization: `Bearer ${localStorage.getItem("token")}`
           }
         }
       );
       if(response.data.success){
+        toast.warning("Note deleted")
         fetchNotes()
       }
 
@@ -125,7 +135,7 @@ const Home = () => {
           <NoteCard note={note}
             onEdit={onEdit}
             deleteNote={deleteNote} />
-        )) : <p>No notes are available</p> }
+        )) : <p className='text-xl font-normal text-slate-500'>No notes are available ... </p> }
       </div>
 
       <button
